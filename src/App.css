@@ -476,19 +476,25 @@ code {
 
 .product-carousel__track {
   display: flex;
-  transition: transform 520ms ease;
+  width: max-content;
+  gap: 0;
+  animation: productMarquee 32s linear infinite;
   will-change: transform;
 }
 
-.product-grid {
-  display: grid;
-  flex: 0 0 100%;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+.product-carousel:hover .product-carousel__track {
+  animation-play-state: paused;
+}
+
+.product-marquee-group {
+  display: flex;
+  flex-shrink: 0;
   gap: 20px;
-  padding: 2px;
+  padding-right: 20px;
 }
 
 .product-card {
+  flex: 0 0 clamp(220px, 24vw, 300px);
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
@@ -557,36 +563,14 @@ code {
   line-height: 1.2;
 }
 
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 9px;
-  margin-top: 24px;
-}
+@keyframes productMarquee {
+  from {
+    transform: translateX(0);
+  }
 
-.carousel-dots button {
-  width: 10px;
-  height: 10px;
-  border: 0;
-  border-radius: 50%;
-  padding: 0;
-  background: #b8d3e9;
-  cursor: pointer;
-  transition:
-    background-color 180ms ease,
-    transform 180ms ease,
-    width 180ms ease;
-}
-
-.carousel-dots button.is-active {
-  width: 28px;
-  border-radius: 999px;
-  background: var(--blue);
-}
-
-.carousel-dots button:focus-visible {
-  outline: 3px solid rgba(22, 105, 183, 0.28);
-  outline-offset: 4px;
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .dot-loader {

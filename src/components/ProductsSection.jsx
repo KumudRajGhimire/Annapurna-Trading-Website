@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const featuredProducts = [
   {
@@ -123,28 +123,7 @@ function getVisibleCount() {
 }
 
 function ProductsSection() {
-  const [activePage, setActivePage] = useState(0)
-  const [visibleCount, setVisibleCount] = useState(getVisibleCount)
-  const totalPages = Math.ceil(featuredProducts.length / visibleCount)
-
-  useEffect(() => {
-    const updateVisibleCount = () => {
-      setVisibleCount(getVisibleCount())
-      setActivePage(0)
-    }
-
-    window.addEventListener('resize', updateVisibleCount)
-
-    return () => window.removeEventListener('resize', updateVisibleCount)
-  }, [])
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActivePage((currentPage) => (currentPage + 1) % totalPages)
-    }, 2000)
-
-    return () => window.clearInterval(timer)
-  }, [totalPages])
+  const marqueeProducts = [...featuredProducts, ...featuredProducts]
 
   return (
     <section className="section products-section" id="products">
@@ -157,38 +136,19 @@ function ProductsSection() {
         </p>
       </div>
 
-      <div className="product-carousel" aria-live="polite">
-        <div
-          className="product-carousel__track"
-          style={{ transform: `translateX(-${activePage * 100}%)` }}
-        >
-          {Array.from({ length: totalPages }).map((_, pageIndex) => {
-            const products = featuredProducts.slice(
-              pageIndex * visibleCount,
-              pageIndex * visibleCount + visibleCount,
-            )
-
-            return (
-              <div className="product-grid" key={pageIndex}>
-                {products.map((product) => (
-                  <ProductCard product={product} key={product.name} />
-                ))}
-              </div>
-            )
-          })}
+      <div className="product-carousel" aria-label="Featured products carousel">
+        <div className="product-carousel__track">
+          <div className="product-marquee-group">
+            {featuredProducts.map((product) => (
+              <ProductCard product={product} key={product.name} />
+            ))}
+          </div>
+          <div className="product-marquee-group" aria-hidden="true">
+            {marqueeProducts.slice(featuredProducts.length).map((product, index) => (
+              <ProductCard product={product} key={`${product.name}-duplicate-${index}`} />
+            ))}
+          </div>
         </div>
-      </div>
-
-      <div className="carousel-dots" aria-label="Product carousel pages">
-        {Array.from({ length: totalPages }).map((_, pageIndex) => (
-          <button
-            className={pageIndex === activePage ? 'is-active' : ''}
-            type="button"
-            key={pageIndex}
-            aria-label={`Show product group ${pageIndex + 1}`}
-            onClick={() => setActivePage(pageIndex)}
-          />
-        ))}
       </div>
     </section>
   )
