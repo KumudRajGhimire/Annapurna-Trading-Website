@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Sanjog Regmi">
+  <rect width="900" height="1100" fill="#eef8fd"/>
+  <circle cx="450" cy="330" r="150" fill="#174a91"/>
+  <path d="M180 980c20-235 150-365 270-365s250 130 270 365" fill="#1669b7"/>
+  <text x="450" y="1000" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="700" fill="#174a91">Sanjog Regmi</text>
+</svg>

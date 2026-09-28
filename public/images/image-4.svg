@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 675" role="img" aria-label="image-4 placeholder">
+  <rect width="900" height="675" fill="#f7f8f2"/>
+  <rect x="165" y="115" width="570" height="335" rx="18" fill="#ffffff" stroke="#dfe3d7" stroke-width="7"/>
+  <circle cx="304" cy="284" r="78" fill="#1f6b53"/>
+  <circle cx="450" cy="284" r="78" fill="#c9952f"/>
+  <circle cx="596" cy="284" r="78" fill="#a44f35"/>
+  <text x="450" y="555" text-anchor="middle" font-family="Arial, sans-serif" font-size="64" font-weight="700" fill="#1d2a2e">image-4</text>
+</svg>
