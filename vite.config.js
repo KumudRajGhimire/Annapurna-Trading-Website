@@ -7,7 +7,7 @@ export default defineConfig({
   ],
   server: {
     allowedHosts: [
-      'unplied-ardis-systemizable.ngrok-free.dev',
+      'ossie-unnymphal-nonrefractively.ngrok-free.dev',
     ],
     port: 5174,
     strictPort: true,

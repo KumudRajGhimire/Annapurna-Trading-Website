@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FaBars, FaXmark } from 'react-icons/fa6'
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -31,9 +32,7 @@ function Navbar() {
           aria-expanded={isOpen}
           onClick={() => setIsOpen((open) => !open)}
         >
-          <span />
-          <span />
-          <span />
+          {isOpen ? <FaXmark /> : <FaBars />}
         </button>
       </div>
       <div className="nav-menu">
@@ -44,7 +43,7 @@ function Navbar() {
           <a href="#directors" onClick={closeMenu}>Directors</a>
           <a href="#contact" onClick={closeMenu}>Contact</a>
         </div>
-        <a className="nav-action" href="#contact" onClick={closeMenu}>
+        <a className="nav-action" href="#quote" onClick={closeMenu}>
           Get Quote
         </a>
       </div>

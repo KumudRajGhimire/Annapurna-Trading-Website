@@ -157,22 +157,13 @@ a {
   border-radius: 8px;
   padding: 0;
   background: #eef8fd;
+  color: var(--blue-dark);
   cursor: pointer;
 }
 
-.menu-toggle span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  border-radius: 999px;
-  background: var(--blue-dark);
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease;
-}
-
-.menu-toggle span + span {
-  margin-top: 5px;
+.menu-toggle svg {
+  width: 20px;
+  height: 20px;
 }
 
 .nav-links a,
@@ -461,6 +452,110 @@ p {
   max-width: 680px;
 }
 
+.quote-section {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.quote-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(20px, 4vw, 36px);
+  padding: clamp(26px, 4vw, 42px);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(238, 248, 253, 0.8), rgba(255, 255, 255, 0.96));
+  box-shadow: 0 24px 52px rgba(18, 51, 91, 0.08);
+}
+
+.quote-copy,
+.quote-form {
+  display: grid;
+  align-content: start;
+}
+
+.quote-copy {
+  gap: 12px;
+}
+
+.quote-points {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.quote-points li {
+  position: relative;
+  padding-left: 20px;
+  color: #2d4259;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.quote-points li::before {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  content: '';
+}
+
+.quote-form {
+  gap: 14px;
+  padding: clamp(18px, 3vw, 26px);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.quote-form__field {
+  display: grid;
+  gap: 8px;
+}
+
+.quote-form label {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.quote-form input,
+.quote-form textarea {
+  width: 100%;
+  border: 1px solid #cfe0ef;
+  border-radius: 8px;
+  padding: 13px 14px;
+  color: var(--ink);
+  background: #fff;
+  font: inherit;
+}
+
+.quote-form input:focus,
+.quote-form textarea:focus {
+  outline: 2px solid rgba(22, 105, 183, 0.18);
+  border-color: var(--blue);
+}
+
+.quote-form textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+.quote-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.quote-actions .button {
+  width: auto;
+}
+
 code {
   padding: 2px 6px;
   border-radius: 5px;
@@ -470,20 +565,51 @@ code {
 }
 
 .product-carousel {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: visible;
   width: 100%;
+  padding-bottom: 12px;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+}
+
+.product-carousel:active {
+  cursor: grabbing;
+}
+
+.product-carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .product-carousel__track {
   display: flex;
+  gap: 20px;
   width: max-content;
-  gap: 0;
-  animation: productMarquee 32s linear infinite;
-  will-change: transform;
+  min-width: 100%;
+  padding-right: 8px;
+  scroll-snap-type: x proximity;
 }
 
-.product-carousel:hover .product-carousel__track {
-  animation-play-state: paused;
+.product-card {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+.product-carousel.is-paused {
+  scroll-behavior: auto;
+}
+
+@media (max-width: 640px) {
+  .product-carousel {
+    touch-action: pan-y pinch-zoom;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+  }
 }
 
 .product-marquee-group {
@@ -561,16 +687,6 @@ code {
   font-size: 12px;
   font-weight: 900;
   line-height: 1.2;
-}
-
-@keyframes productMarquee {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
 }
 
 .dot-loader {
@@ -997,6 +1113,7 @@ address {
   .about-section,
   .mission-section,
   .split-section,
+  .quote-panel,
   .footer {
     grid-template-columns: 1fr;
   }

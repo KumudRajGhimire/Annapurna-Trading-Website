@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const featuredProducts = [
   {
@@ -106,24 +106,104 @@ function ProductCard({ product }) {
   )
 }
 
-function getVisibleCount() {
-  if (typeof window === 'undefined') {
-    return 4
-  }
-
-  if (window.matchMedia('(max-width: 640px)').matches) {
-    return 1
-  }
-
-  if (window.matchMedia('(max-width: 980px)').matches) {
-    return 2
-  }
-
-  return 4
-}
-
 function ProductsSection() {
-  const marqueeProducts = [...featuredProducts, ...featuredProducts]
+  const [isInteracting, setIsInteracting] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const carouselRef = useRef(null)
+  const dragRef = useRef({ active: false, startX: 0, startScrollLeft: 0 })
+  const pauseTimerRef = useRef(null)
+  const duplicatedProducts = [...featuredProducts, ...featuredProducts]
+
+  useEffect(() => {
+    const carousel = carouselRef.current
+
+    if (!carousel) {
+      return undefined
+    }
+
+    let direction = 1
+    let frameId = null
+
+    const tick = () => {
+      if (!isInteracting && !isHovered && carousel.scrollWidth > carousel.clientWidth) {
+        const maxScroll = carousel.scrollWidth / 2
+        const nextScroll = carousel.scrollLeft + direction * 0.7
+
+        if (nextScroll >= maxScroll) {
+          direction = -1
+          carousel.scrollLeft = maxScroll
+        } else if (nextScroll <= 0) {
+          direction = 1
+          carousel.scrollLeft = 0
+        } else {
+          carousel.scrollLeft = nextScroll
+        }
+      }
+
+      frameId = window.requestAnimationFrame(tick)
+    }
+
+    frameId = window.requestAnimationFrame(tick)
+
+    return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+    }
+  }, [isHovered, isInteracting])
+
+  const pauseAutoScroll = () => {
+    if (pauseTimerRef.current) {
+      clearTimeout(pauseTimerRef.current)
+    }
+
+    const isMobileViewport = window.innerWidth <= 768
+
+    if (!isMobileViewport) {
+      setIsInteracting(false)
+      return
+    }
+
+    setIsInteracting(true)
+    pauseTimerRef.current = setTimeout(() => {
+      setIsInteracting(false)
+    }, 2000)
+  }
+
+  const handlePointerDown = (event) => {
+    const carousel = carouselRef.current
+
+    if (!carousel) {
+      return
+    }
+
+    const clientX = event.touches ? event.touches[0].clientX : event.clientX
+
+    dragRef.current = {
+      active: true,
+      startX: clientX,
+      startScrollLeft: carousel.scrollLeft,
+    }
+
+    setIsInteracting(true)
+  }
+
+  const handlePointerMove = (event) => {
+    const carousel = carouselRef.current
+
+    if (!carousel || !dragRef.current.active) {
+      return
+    }
+
+    const clientX = event.touches ? event.touches[0].clientX : event.clientX
+    const delta = clientX - dragRef.current.startX
+    carousel.scrollLeft = dragRef.current.startScrollLeft - delta
+  }
+
+  const finishDragging = () => {
+    dragRef.current.active = false
+    pauseAutoScroll()
+  }
 
   return (
     <section className="section products-section" id="products">
@@ -136,20 +216,29 @@ function ProductsSection() {
         </p>
       </div>
 
-      <div className="product-carousel" aria-label="Featured products carousel">
+      <div
+        ref={carouselRef}
+        className={`product-carousel ${isInteracting || isHovered ? 'is-paused' : ''}`}
+        aria-label="Featured products carousel"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={finishDragging}
+        onPointerLeave={finishDragging}
+        onPointerCancel={finishDragging}
+        onTouchStart={handlePointerDown}
+        onTouchMove={handlePointerMove}
+        onTouchEnd={finishDragging}
+        onTouchCancel={finishDragging}
+      >
         <div className="product-carousel__track">
-          <div className="product-marquee-group">
-            {featuredProducts.map((product) => (
-              <ProductCard product={product} key={product.name} />
-            ))}
-          </div>
-          <div className="product-marquee-group" aria-hidden="true">
-            {marqueeProducts.slice(featuredProducts.length).map((product, index) => (
-              <ProductCard product={product} key={`${product.name}-duplicate-${index}`} />
-            ))}
-          </div>
+          {duplicatedProducts.map((product, index) => (
+            <ProductCard product={product} key={`${product.name}-${index}`} />
+          ))}
         </div>
       </div>
+
     </section>
   )
 }
